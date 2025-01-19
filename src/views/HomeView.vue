@@ -193,13 +193,11 @@ export default defineComponent({
         const response = await fetch(
           `https://randomuser.me/api/?page=${this.currentPage}&results=${totalPage}`
         );
-        console.log('API response received'); // Debugging
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
         const data = await response.json();
         this.list = data.results;
-        console.log('Users set:', this.list); // Debugging
       } catch (error:any) {
         console.error('Failed to fetch data:', error.message);
       }
