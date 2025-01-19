@@ -28,25 +28,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-
-interface NavLink {
-  text: string;
-  href: string;
-}
+import type { PropType } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'HeaderComponent',
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    links: {
-      type: Array as PropType<NavLink[]>,
-      required: true,
-    },
-  },
+  name: 'BannerComponent',
   methods: {
     popup() {
       alert("Apologize there's no function ya. hehe");

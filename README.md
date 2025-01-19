@@ -13,6 +13,4 @@ Requirement have done in this project
 -Implement a search function to filter through the list
 -Implement a sorting function to sort the list
 -Implement pagination functionality, you can use https://randomuser.me/api/?page=page&results=20
-
-
-NOTE AS ASIDE - Unfortunately i have not included build configuration on this project
++ Implement build configuration on vite  

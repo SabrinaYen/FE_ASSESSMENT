@@ -140,7 +140,7 @@ import moment from 'moment';
 export default defineComponent({
   name: 'HomeView',
   computed: {
-    filteredData() {
+    filteredData() : Array<Record<string, any>> {
       return this.list.filter((user) => {
         const matchesSearch =
           user.name.first
@@ -158,13 +158,13 @@ export default defineComponent({
       });
     },
 
-    paginatedData() {
+    paginatedData() : Array<Record<string, any>> {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
       return this.filteredData.slice(start, end);
     },
 
-    totalPages() {
+    totalPages(): number {
       return Math.ceil(this.filteredData.length / this.itemsPerPage);
     },
   },
@@ -177,12 +177,12 @@ export default defineComponent({
         { label: 'Country', style: 'w-1/4' },
         { label: 'Email', style: 'w-1/4' },
       ],
-      list: [],
+      list: [] as Array<Record<string, any>>,
       searchQuery: '',
       selectedGender: '',
       currentPage: 1,
       itemsPerPage: 5,
-      selectedUser: [],
+      selectedUser: null as Record<string, any> | null,
       showModal: false,
     };
   },
@@ -193,19 +193,21 @@ export default defineComponent({
         const response = await fetch(
           `https://randomuser.me/api/?page=${this.currentPage}&results=${totalPage}`
         );
+        console.log('API response received'); // Debugging
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
         const data = await response.json();
         this.list = data.results;
-      } catch (error) {
+        console.log('Users set:', this.list); // Debugging
+      } catch (error:any) {
         console.error('Failed to fetch data:', error.message);
       }
     },
-    formatDate(date) {
+    formatDate(date: string) {
       return moment(date).format('YYYY-MM-DD');
     },
-    openModal(user) {
+    openModal(user: Record<string, any>) {
       this.selectedUser = user;
       this.showModal = true;
     },
