@@ -1,39 +1,41 @@
 import { fileURLToPath, URL } from 'node:url';
-import { defineConfig } from 'vite';
+import { ConfigEnv, defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-export default defineConfig({
-  plugins: [vue()],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
-  server: {
-    port: 3000, 
-    open: true, 
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000', 
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+export default defineConfig(({ mode }: ConfigEnv) => {
+  return {
+    plugins: [vue()],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
-  },
-  build: {
-    target: 'es2015', 
-    outDir: 'dist', 
-    assetsDir: 'assets', 
-    sourcemap: false, 
-    minify: 'terser', 
-    cssCodeSplit: true, 
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['vue'], 
+    server: {
+      port: 3000,
+      open: true,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
     },
-  },
-  base: '/FE_ASSESSMENT/', 
+    build: {
+      target: 'es2015',
+      outDir: 'dist',
+      assetsDir: 'assets',
+      sourcemap: false,
+      minify: 'terser',
+      cssCodeSplit: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['vue'],
+          },
+        },
+      },
+    },
+    base: mode === "production" ? '/FE_ASSESSMENT/' : './',
+  }
 });

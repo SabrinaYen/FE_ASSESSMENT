@@ -5,8 +5,9 @@ import BannerComponent from './components/BannerComponent.vue';
 </script>
 
 <template>
-  <HeaderComponent />
-  <BannerComponent />
-  <RouterView />
+  <div>
+    <HeaderComponent  class="px-[100px]"/>
+    <BannerComponent class="px-[100px]"/>
+    <RouterView class="px-[100px]"/>
+  </div>
 </template>
-<script></script>

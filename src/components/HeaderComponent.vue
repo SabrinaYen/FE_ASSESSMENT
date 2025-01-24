@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <div class="header-container flex justify-around w-full items-center">
+    <div class="header-container flex justify-between w-full items-center">
       <div class="logo">
         <img src="../assets/Logo.png" />
       </div>
