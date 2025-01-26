@@ -1,6 +1,6 @@
 <template>
   <div class="py-10">
-    <div class="table-form-page my-5">
+    <div class="table-form-page my-5 overflow-x-auto">
       <div class="w-full flex justify-center gap-5">
         <!-- Search Function -->
         <input type="text" v-model="searchQuery" placeholder="Search by name or email"
@@ -15,57 +15,38 @@
       </div>
     </div>
     <!-- Table Form -->
-    <table class="table-auto w-full border-collapse p-2 flex-col border-spacing-4 px-[120px]">
-      <thead>
-        <tr class="">
-          <th v-for="(field, key) in formFields" :key="key"
-            class="text-left p-4 text-[#999] text-sm font-light font-normal">
+    <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+      <div class="overflow-x-auto space-y-4">
+        <div class="flex p-4 rounded-lg font-medium text-sm text-[#999]">
+          <div v-for="(field, key) in formFields" :key="key" class="flex-1">
             {{ field.label }}
-          </th>
-        </tr>
-      </thead>
+          </div>
+        </div>
 
-      <tbody>
-        <tr v-for="user in filteredData" :key="user.login.uuid"
-          class="cursor-pointer group rounded-lg hover:border-[#35bad8] transition-colors border-2 border-transparent  shadow mb-5 font-extralight"
+        <tr v-show="filteredData.length > 0" v-for="user in filteredData" :key="user.login.uuid"
+          class="flex bg-white shadow-md rounded-lg hover:border hover:border-[#35bad8] hover:border-2 cursor-pointer w-full"
           @click="openModal(user)">
-          <td class="p-8 text-[#CBCBCB]">
+          <td class="flex-1 p-5 text-[#CBCBCB]">
             {{ formatDate(user.dob.date) }}
           </td>
-          <td class="p-8 group-hover:text-[#35bad8] group-hover:font-semibold transition-colors capitalize">
+          <td class="flex-1 p-5 group-hover:text-[#35bad8] group-hover:font-semibold transition-colors capitalize">
             {{ `${user.name.first} ${user.name.last}` }}
           </td>
-          <td class="p-8 group-hover:font-semibold group-hover:text-[#000] transition-colors text-[#CBCBCB] capitalize">
+          <td
+            class="flex-1 p-5 group-hover:font-semibold group-hover:text-[#000] transition-colors text-[#CBCBCB] capitalize">
             {{ user.gender }}
           </td>
-          <td class="p-8 capitalize">
+          <td class="flex-1 p-5 capitalize">
             {{ user.location.country }}
           </td>
-          <td class="p-8 text-[#CBCBCB] ">
+          <td class="flex-1 p-5 text-[#CBCBCB]">
             {{ user.email }}
           </td>
         </tr>
-      </tbody>
-    </table>
+        <div v-show="filteredData.length === 0" class="text-center font-semibold p-4"> No Record</div>
+      </div>
+    </div>
 
-    <!-- Pagination Function TODO: pagination with slot refresh button-->
-    <!-- <div class="flex justify-around items-center mt-4">
-      <button
-        :disabled="currentPage === 1"
-        @click="currentPage--"
-        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition disabled:bg-gray-300"
-      >
-        Previous
-      </button>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button
-        :disabled="currentPage === totalPages"
-        @click="currentPage++"
-        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition disabled:bg-gray-300"
-      >
-        Next
-      </button>
-    </div> -->
     <!-- Popup Modal for more details-->
     <div v-if="showModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
       <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
@@ -103,9 +84,28 @@
         </div>
       </div>
     </div>
+     <!-- Pagination Function TODO: pagination with slot refresh button-->
+    <div class="flex justify-between items-center mt-4 w-full">
+      <button
+        :disabled="currentPage === 1"
+        @click="currentPage--"
+        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition disabled:bg-gray-300"
+      >
+        Previous
+      </button>
+      <span class="w-[120px] text-center">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        :disabled="currentPage === totalPages"
+        @click="currentPage++"
+        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition disabled:bg-gray-300"
+      >
+        Next
+      </button>
+    </div>
     <!-- Refresh Button -->
     <div class="w-full flex justify-center">
-      <button class="w-[120px] h-[50px] rounded mt-5 bg-[#35bad8] flex justify-center items-center gap-2" @click="refresh">
+      <button class="w-[120px] h-[50px] rounded mt-5 bg-[#35bad8] flex justify-center items-center gap-2"
+        @click="refresh">
         <IconRefresh width="24" height="24" fill="#FFFFFF" />
         <span class="text-white text-md">Refresh</span>
       </button>
@@ -117,26 +117,27 @@
 import { defineComponent } from 'vue';
 import moment from 'moment';
 import IconRefresh from '@/components/IconSvg/IconRefresh.vue';
+import { useLoadingStore } from '@/stores';
+
 export default defineComponent({
   name: 'HomeView',
-  components:{
+  components: {
     IconRefresh
   },
   computed: {
     filteredData(): Array<Record<string, any>> {
       return this.list.filter((user) => {
         const matchesSearch =
-          user.name.first
+          user?.name.first
             .toLowerCase()
             .includes(this.searchQuery.toLowerCase()) ||
-          user.name.last
+          user?.name.last
             .toLowerCase()
             .includes(this.searchQuery.toLowerCase()) ||
-          user.email.toLowerCase().includes(this.searchQuery.toLowerCase());
+          user?.email.toLowerCase().includes(this.searchQuery.toLowerCase());
 
         const matchesGender =
           this.selectedGender === '' || user.gender === this.selectedGender;
-
         return matchesSearch && matchesGender;
       });
     },
@@ -148,6 +149,7 @@ export default defineComponent({
     },
 
     totalPages(): number {
+      console.log(this.filteredData.length ,this.itemsPerPage)
       return Math.ceil(this.filteredData.length / this.itemsPerPage);
     },
   },
@@ -170,9 +172,15 @@ export default defineComponent({
     };
   },
   methods: {
+    toggleLoadingState(val: Boolean) {
+      const loadingStore = useLoadingStore();
+      loadingStore.setIsLoading(val as boolean);
+    },
     async fetchData() {
+
       try {
         const totalPage = this.list.length > 20 ? this.list.length + 7 : 20;
+        this.toggleLoadingState(true);
         const response = await fetch(
           `https://randomuser.me/api/?page=${this.currentPage}&results=${totalPage}`
         );
@@ -180,9 +188,13 @@ export default defineComponent({
           throw new Error(`Error: ${response.status}`);
         }
         const data = await response.json();
-        this.list = data.results;
+        this.list = data.results.sort((a: User, b: User) => {
+          return a?.name.first.localeCompare(b?.name.first);
+        });
       } catch (error: any) {
         console.error('Failed to fetch data:', error.message);
+      } finally {
+        this.toggleLoadingState(false);
       }
     },
     formatDate(date: string) {
@@ -207,6 +219,18 @@ export default defineComponent({
     currentPage() {
       this.fetchData();
     },
+    searchQuery() {
+      this.currentPage = 1;
+    },
+    selectedGender(){
+      this.currentPage = 1;
+    }
   },
 });
+interface User {
+  name: {
+    first: string;
+    last: string;
+  };
+}
 </script>
