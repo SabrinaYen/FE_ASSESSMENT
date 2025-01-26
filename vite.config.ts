@@ -1,13 +1,18 @@
-import { fileURLToPath, URL } from 'node:url';
+const path = require('path');
 import { ConfigEnv, defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+
+
 export default defineConfig(({ mode }: ConfigEnv) => {
   return {
     plugins: [vue()],
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
+        '@': path.resolve(__dirname, './src'),
       },
+    },
+    define: {
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
     },
     server: {
       port: 3000,
