@@ -149,7 +149,6 @@ export default defineComponent({
     },
 
     totalPages(): number {
-      console.log(this.filteredData.length ,this.itemsPerPage)
       return Math.ceil(this.filteredData.length / this.itemsPerPage);
     },
   },
