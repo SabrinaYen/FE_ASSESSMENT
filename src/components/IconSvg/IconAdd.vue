@@ -1,8 +1,9 @@
 <template>
   <svg
-    v-bind="$props"
+    :width="width" 
+    :height="height" 
+    :fill="fill"
     viewBox="0 0 24 24"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <g id="Edit / Add_Plus">
@@ -17,12 +18,15 @@
     </g>
   </svg>
 </template>
-<script>
-    export default {
-        props: {
-            width: { type: [String, Number], default: 24 },
-            height: { type: [String, Number], default: 24 },
-            fill: { type: String, default: "currentColor" },
-        }
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({
+    name:"IconAdd",
+    props: {
+        width: { type: [String, Number], default: 24 },
+        height: { type: [String, Number], default: 24 },
+        fill: { type: String, default: "currentColor" },
     }
+});
 </script>
+
