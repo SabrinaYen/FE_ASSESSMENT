@@ -1,12 +1,15 @@
 <script setup lang="ts">
+// Route
 import { RouterView } from 'vue-router';
-import HeaderComponent from './components/HeaderComponent.vue';
-import BannerComponent from './components/BannerComponent.vue';
+//Component
+import HeaderComponent from '@/components/HeaderComponent.vue';
+import BannerComponent from '@/components/BannerComponent.vue';
+import LoadingComponent from '@/components/LoadingComponent.vue';
 </script>
 
 <template>
-  <HeaderComponent />
-  <BannerComponent />
-  <RouterView />
+    <LoadingComponent />
+    <HeaderComponent class="px-[100px]" />
+    <BannerComponent class="px-[100px]" />
+    <RouterView class="px-[100px]" />
 </template>
-<script></script>
